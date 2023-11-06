@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-import { utcToZonedTime } from "date-fns-tz";
 import { isHoliday } from "./holiday";
 
 // ---
@@ -48,13 +47,19 @@ export const isBusinessHoliday = async (
     return true;
   }
 
-  if ([0, 6].includes(utcToZonedTime(date, "Asia/Tokyo").getDay())) {
+  if ([0, 6].includes(date.getDay())) {
     // 土日
     console.log("Business Holiday!");
     return true;
   }
 
-  // TODO: 全員休業
+  const allUsers = await fetchAllUsers(env, date);
+  const LeaveUsers = await fetchLeaveUsers(env, date);
+
+  if (allUsers.length === LeaveUsers.length) {
+    console.log(`No work users day. ${allUsers.length}`);
+    return true;
+  }
 
   return false;
 };
@@ -66,9 +71,9 @@ const fetchUsers = async (
   date: Date,
   targets: string[] = []
 ): Promise<string[]> => {
-  const targetMonth = format(utcToZonedTime(date, "Asia/Tokyo"), "yyyy/M");
+  const targetMonth = format(date, "yyyy/M");
 
-  const targetRow = utcToZonedTime(date, "Asia/Tokyo").getDate() + 3;
+  const targetRow = date.getDate() + 3;
 
   const header = await fetchSheets(env, `${targetMonth}!G2:BA2`);
 
@@ -113,9 +118,9 @@ const fetchSheets = async (env: Env, range: string): Promise<string[][]> => {
   );
   request.headers.append("x-goog-api-key", env.GOOGLE_API_KEY);
 
-  const response = await fetch(request);
-
-  const { values } = await response.json<{
+  const { values } = await (
+    await fetch(request)
+  ).json<{
     range: string;
     majorDimension: "string";
     values: string[][];

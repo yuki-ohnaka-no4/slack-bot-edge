@@ -82,7 +82,7 @@ const cache = async <T extends SlackAPIResponse>(
 
   if (cached) {
     console.log(`cache hit slack`);
-    return cached.json<T>();
+    return await cached.json<T>();
   }
 
   const result = await fetch();

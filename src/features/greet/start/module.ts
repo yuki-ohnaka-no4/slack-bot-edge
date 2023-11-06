@@ -1,5 +1,4 @@
 import { format } from "date-fns";
-import { utcToZonedTime } from "date-fns-tz";
 import type {
   AnySendableMessageBlock,
   SlackAPIClient,
@@ -22,10 +21,7 @@ export const trigger = ":ohayou:" as const;
 // ---
 
 export const toTitle = (date: Date): string => {
-  return `${trigger} ${format(
-    utcToZonedTime(date, "Asia/Tokyo"),
-    "yyyy/MM/dd (E)"
-  )}`;
+  return `${trigger} ${format(date, "yyyy/MM/dd (E)")}`;
 };
 
 // ---

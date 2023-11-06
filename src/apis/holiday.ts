@@ -1,7 +1,6 @@
 import { format } from "date-fns";
 import { z } from "zod";
 import { ja } from "date-fns/locale";
-import { utcToZonedTime } from "date-fns-tz";
 
 // ---
 
@@ -22,10 +21,9 @@ const fetchHolidays = async (year: number | string): Promise<Holidays> => {
 // ---
 
 export const isHoliday = async (date: Date): Promise<boolean> => {
-  const dateWithTz = utcToZonedTime(date, "Asia/Tokyo");
-  const holidays = await fetchHolidays(dateWithTz.getFullYear());
+  const holidays = await fetchHolidays(date.getFullYear());
   return Object.keys(holidays).includes(
-    format(dateWithTz, `yyyy-MM-dd`, {
+    format(date, `yyyy-MM-dd`, {
       locale: ja,
     })
   );

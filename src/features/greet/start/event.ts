@@ -2,6 +2,7 @@ import type { EventRequest } from "slack-cloudflare-workers";
 import type { Env } from "~/@types/app";
 import { fetchReactions } from "~/apis/slack";
 import { toBlocks, toReactionRecords, toTitle, trigger } from "./module";
+import { utcToZonedTime } from "date-fns-tz";
 
 // ---
 
@@ -33,7 +34,9 @@ const reactionEventHandler = async (
     return;
   }
 
-  const date = new Date(Number(ts) * 1000);
+  const date = utcToZonedTime(new Date(Number(ts) * 1000), "Asia/Tokyo");
+
+  console.log(date);
 
   const reactions = await toReactionRecords(
     req.context.custom["env"] as Env,

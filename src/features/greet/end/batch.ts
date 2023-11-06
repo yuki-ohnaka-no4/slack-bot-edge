@@ -2,6 +2,7 @@ import { toTitle, toBlocks } from "./module";
 import type { Env } from "~/@types/app";
 import type { SlackAPIClient } from "slack-cloudflare-workers";
 import { isBusinessHoliday } from "~/apis/sheet";
+import { utcToZonedTime } from "date-fns-tz";
 
 // ---
 
@@ -16,7 +17,9 @@ export const handler = async (
     throw new Error("Invalid Params.");
   }
 
-  const date = new Date();
+  const date = utcToZonedTime(new Date(), "Asia/Tokyo");
+
+  console.log(date);
 
   if (await isBusinessHoliday(env, date)) {
     return;
