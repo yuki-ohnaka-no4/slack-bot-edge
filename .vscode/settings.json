@@ -1,4 +1,10 @@
 {
   "editor.formatOnSave": true,
-  "eslint.format.enable": true
+  "eslint.format.enable": true,
+  "json.schemas": [
+    {
+      "fileMatch": [".ncurc", ".ncurc.json"],
+      "url": "https://raw.githubusercontent.com/raineorshine/npm-check-updates/main/src/types/RunOptions.json"
+    }
+  ]
 }

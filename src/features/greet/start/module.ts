@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import type {
-  AnySendableMessageBlock,
+  AnyMessageBlock,
   SlackAPIClient,
 } from "slack-cloudflare-workers";
 import type { Reaction } from "slack-web-api-client/dist/client/generated-response/ReactionsGetResponse";
@@ -149,7 +149,7 @@ export const toReactionRecords = async (
 export const toBlocks = (
   title: string,
   reactionRecords: ReactionRecord[]
-): AnySendableMessageBlock[] => {
+): AnyMessageBlock[] => {
   return [
     {
       type: "header",
@@ -169,8 +169,8 @@ export const toBlocks = (
     {
       type: "divider",
     },
-    ...reactionRecords.map<AnySendableMessageBlock>(
-      (reactionRecord: ReactionRecord): AnySendableMessageBlock => {
+    ...reactionRecords.map<AnyMessageBlock>(
+      (reactionRecord: ReactionRecord): AnyMessageBlock => {
         return {
           type: "section",
           text: {

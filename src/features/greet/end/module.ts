@@ -1,4 +1,4 @@
-import type { AnySendableMessageBlock } from "slack-cloudflare-workers";
+import type { AnyMessageBlock } from "slack-cloudflare-workers";
 import { format } from "date-fns";
 
 // ---
@@ -13,7 +13,7 @@ export const toTitle = (date: Date): string => {
 
 // ---
 
-export const toBlocks = (date: Date): AnySendableMessageBlock[] => {
+export const toBlocks = (date: Date): AnyMessageBlock[] => {
   return [
     {
       type: "header",
