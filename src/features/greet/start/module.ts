@@ -189,5 +189,12 @@ export const toBlocks = (
     {
       type: "divider",
     },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: "休みや出社日の変更は <https://no4-chat.slack.com/canvas/CQYH702Q4?focus_section_id=temp:C:cUL36314564bcff4c80a892852b3|こちら> から",
+      },
+    },
   ];
 };
