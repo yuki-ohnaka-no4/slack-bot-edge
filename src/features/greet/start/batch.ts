@@ -1,8 +1,11 @@
-import { toTitle, toBlocks, toReactionRecords } from "./module";
-import type { Env } from "~/@types/app";
-import type { SlackAPIClient } from "slack-cloudflare-workers";
-import { isBusinessHoliday } from "~/apis/sheet";
 import { utcToZonedTime } from "date-fns-tz";
+
+import type { Env } from "~/@types/app";
+import { isBusinessHoliday } from "~/apis/sheet";
+
+import { toTitle, toBlocks, toReactionRecords } from "./module";
+
+import type { SlackAPIClient } from "slack-cloudflare-workers";
 
 // ---
 
@@ -29,10 +32,7 @@ const handler = async (
   const response = await client.chat.postMessage({
     channel,
     text: toTitle(date),
-    blocks: toBlocks(
-      toTitle(date),
-      await toReactionRecords(env, context, client, date)
-    ),
+    blocks: toBlocks(toTitle(date), await toReactionRecords(env, context, client, date)),
   });
 
   if (!response.ok) {

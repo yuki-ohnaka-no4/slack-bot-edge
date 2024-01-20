@@ -1,6 +1,6 @@
 import { format } from "date-fns";
-import { z } from "zod";
 import { ja } from "date-fns/locale";
+import { z } from "zod";
 
 // ---
 
@@ -12,9 +12,7 @@ type Holidays = z.infer<typeof HolidaysSchema>;
 
 const fetchHolidays = async (year: number | string): Promise<Holidays> => {
   return HolidaysSchema.parse(
-    await (
-      await fetch(`https://holidays-jp.github.io/api/v1/${year}/date.json`)
-    ).json()
+    await (await fetch(`https://holidays-jp.github.io/api/v1/${year}/date.json`)).json()
   );
 };
 

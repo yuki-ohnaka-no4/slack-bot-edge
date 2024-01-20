@@ -1,14 +1,14 @@
 import type {
-  Member,
-  UsersListResponse,
-} from "slack-web-api-client/dist/client/generated-response/UsersListResponse";
-import type { ReactionsGetResponse } from "slack-web-api-client/dist/client/generated-response/ReactionsGetResponse";
-import type {
   ReactionAddedEvent,
   ReactionRemovedEvent,
   SlackAPIClient,
   SlackAPIResponse,
 } from "slack-cloudflare-workers";
+import type { ReactionsGetResponse } from "slack-web-api-client/dist/client/generated-response/ReactionsGetResponse";
+import type {
+  Member,
+  UsersListResponse,
+} from "slack-web-api-client/dist/client/generated-response/UsersListResponse";
 
 // ---
 
@@ -27,12 +27,7 @@ export const fetchUsers = async (
 
   return (
     response.members?.filter((user: Member): boolean => {
-      return (
-        !user.is_bot &&
-        !user.is_app_user &&
-        !user.deleted &&
-        user.id !== "USLACKBOT"
-      );
+      return !user.is_bot && !user.is_app_user && !user.deleted && user.id !== "USLACKBOT";
     }) ?? []
   );
 };

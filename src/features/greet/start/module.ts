@@ -1,18 +1,12 @@
 import { format } from "date-fns";
-import type {
-  AnyMessageBlock,
-  SlackAPIClient,
-} from "slack-cloudflare-workers";
+
+import type { Env } from "~/@types/app";
+import { fetchWFOUsers, fetchLeaveUsers, fetchAMLeaveUsers, fetchAllUsers } from "~/apis/sheet";
+import { fetchUsers } from "~/apis/slack";
+
+import type { AnyMessageBlock, SlackAPIClient } from "slack-cloudflare-workers";
 import type { Reaction } from "slack-web-api-client/dist/client/generated-response/ReactionsGetResponse";
 import type { Member } from "slack-web-api-client/dist/client/generated-response/UsersListResponse";
-import { fetchUsers } from "~/apis/slack";
-import {
-  fetchWFOUsers,
-  fetchLeaveUsers,
-  fetchAMLeaveUsers,
-  fetchAllUsers,
-} from "~/apis/sheet";
-import type { Env } from "~/@types/app";
 
 // ---
 
@@ -50,36 +44,28 @@ export const toReactionRecords = async (
 ): Promise<ReactionRecord[]> => {
   const allUserIdSet = new Set<string>(await fetchAllUsers(env, date));
 
-  const users = (await fetchUsers(context, client)).filter(
-    ({ id }: Member): boolean => {
-      return id !== undefined && allUserIdSet.has(id);
-    }
-  );
+  const users = (await fetchUsers(context, client)).filter(({ id }: Member): boolean => {
+    return id !== undefined && allUserIdSet.has(id);
+  });
 
   const reactedUserIds = reactions.flatMap(({ users }: Reaction): string[] => {
     return users ?? [];
   });
   const reactedUserIdSet = new Set<string>(reactedUserIds);
 
-  const wfoUserIds = (await fetchWFOUsers(env, date)).filter(
-    (id: string): boolean => {
-      return !reactedUserIdSet.has(id);
-    }
-  );
+  const wfoUserIds = (await fetchWFOUsers(env, date)).filter((id: string): boolean => {
+    return !reactedUserIdSet.has(id);
+  });
   const wfoUserIdSet = new Set<string>(wfoUserIds);
 
-  const leaveUserIds = (await fetchLeaveUsers(env, date)).filter(
-    (id: string): boolean => {
-      return !reactedUserIdSet.has(id);
-    }
-  );
+  const leaveUserIds = (await fetchLeaveUsers(env, date)).filter((id: string): boolean => {
+    return !reactedUserIdSet.has(id);
+  });
   const leaveUserIdSet = new Set<string>(leaveUserIds);
 
-  const amLeaveUserIds = (await fetchAMLeaveUsers(env, date)).filter(
-    (id: string): boolean => {
-      return !reactedUserIdSet.has(id);
-    }
-  );
+  const amLeaveUserIds = (await fetchAMLeaveUsers(env, date)).filter((id: string): boolean => {
+    return !reactedUserIdSet.has(id);
+  });
   const amLeaveUserIdSet = new Set<string>(amLeaveUserIds);
 
   const reactedAllUserIdSet = new Set<string>([
@@ -146,10 +132,7 @@ export const toReactionRecords = async (
 
 // ---
 
-export const toBlocks = (
-  title: string,
-  reactionRecords: ReactionRecord[]
-): AnyMessageBlock[] => {
+export const toBlocks = (title: string, reactionRecords: ReactionRecord[]): AnyMessageBlock[] => {
   return [
     {
       type: "header",
@@ -169,23 +152,19 @@ export const toBlocks = (
     {
       type: "divider",
     },
-    ...reactionRecords.map<AnyMessageBlock>(
-      (reactionRecord: ReactionRecord): AnyMessageBlock => {
-        return {
-          type: "section",
-          text: {
-            type: "mrkdwn",
-            text:
-              `:${reactionRecord.name}: (${reactionRecord.users.length})` +
-              (reactionRecord.users.length > 0
-                ? `\n\`\`\`${toUserNames(reactionRecord.users).join(
-                    ", "
-                  )}\`\`\``
-                : ``),
-          },
-        };
-      }
-    ),
+    ...reactionRecords.map<AnyMessageBlock>((reactionRecord: ReactionRecord): AnyMessageBlock => {
+      return {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text:
+            `:${reactionRecord.name}: (${reactionRecord.users.length})` +
+            (reactionRecord.users.length > 0
+              ? `\n\`\`\`${toUserNames(reactionRecord.users).join(", ")}\`\`\``
+              : ``),
+        },
+      };
+    }),
     {
       type: "divider",
     },

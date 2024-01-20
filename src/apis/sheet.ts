@@ -1,4 +1,5 @@
 import { format } from "date-fns";
+
 import { isHoliday } from "./holiday";
 
 // ---
@@ -8,40 +9,25 @@ export type Env = {
   GOOGLE_API_KEY: string;
 };
 
-export const fetchAllUsers = async (
-  env: Env,
-  date: Date
-): Promise<string[]> => {
+export const fetchAllUsers = async (env: Env, date: Date): Promise<string[]> => {
   return fetchUsers(env, date);
 };
 
-export const fetchWFOUsers = async (
-  env: Env,
-  date: Date
-): Promise<string[]> => {
+export const fetchWFOUsers = async (env: Env, date: Date): Promise<string[]> => {
   return fetchUsers(env, date, ["◎", "○"]);
 };
 
-export const fetchLeaveUsers = async (
-  env: Env,
-  date: Date
-): Promise<string[]> => {
+export const fetchLeaveUsers = async (env: Env, date: Date): Promise<string[]> => {
   return fetchUsers(env, date, ["休"]);
 };
 
-export const fetchAMLeaveUsers = async (
-  env: Env,
-  date: Date
-): Promise<string[]> => {
+export const fetchAMLeaveUsers = async (env: Env, date: Date): Promise<string[]> => {
   return fetchUsers(env, date, ["AM休"]);
 };
 
 // ---
 
-export const isBusinessHoliday = async (
-  env: Env,
-  date: Date
-): Promise<boolean> => {
+export const isBusinessHoliday = async (env: Env, date: Date): Promise<boolean> => {
   if (await isHoliday(date)) {
     console.log("Holiday!");
     return true;
@@ -66,21 +52,14 @@ export const isBusinessHoliday = async (
 
 // ---
 
-const fetchUsers = async (
-  env: Env,
-  date: Date,
-  targets: string[] = []
-): Promise<string[]> => {
+const fetchUsers = async (env: Env, date: Date, targets: string[] = []): Promise<string[]> => {
   const targetMonth = format(date, "yyyy/M");
 
   const targetRow = date.getDate() + 3;
 
   const header = await fetchSheets(env, `${targetMonth}!G2:BA2`);
 
-  const records = await fetchSheets(
-    env,
-    `${targetMonth}!G${targetRow}:BA${targetRow}`
-  );
+  const records = await fetchSheets(env, `${targetMonth}!G${targetRow}:BA${targetRow}`);
 
   const users = (header?.[0] ?? []).reduce<string[]>(
     (prev: string[], userId: string, index: number): string[] => {

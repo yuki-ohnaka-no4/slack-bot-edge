@@ -1,15 +1,15 @@
-import { toTitle, toBlocks } from "./module";
-import type { Env } from "~/@types/app";
-import type { SlackAPIClient } from "slack-cloudflare-workers";
-import { isBusinessHoliday } from "~/apis/sheet";
 import { utcToZonedTime } from "date-fns-tz";
+
+import type { Env } from "~/@types/app";
+import { isBusinessHoliday } from "~/apis/sheet";
+
+import { toTitle, toBlocks } from "./module";
+
+import type { SlackAPIClient } from "slack-cloudflare-workers";
 
 // ---
 
-export const handler = async (
-  client: SlackAPIClient,
-  env: Env
-): Promise<void> => {
+export const handler = async (client: SlackAPIClient, env: Env): Promise<void> => {
   console.info("handler");
   const channel = env.GREET_CHANNEL_ID;
 

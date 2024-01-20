@@ -1,18 +1,14 @@
 {
   "name": "slack-bot-edge",
-
   "dockerComposeFile": ["compose.yaml"],
   "service": "dev",
   "workspaceFolder": "/workspace",
-
   "features": {
     "ghcr.io/devcontainers/features/git:1": {
       "version": "os-provided"
     }
   },
-
   "postCreateCommand": "npm ci",
-
   "customizations": {
     "vscode": {
       "extensions": [
@@ -29,6 +25,5 @@
       ]
     }
   },
-
   "remoteUser": "root"
 }

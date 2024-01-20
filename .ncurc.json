@@ -1,6 +1,4 @@
 {
-  "upgrade": true,
-  "reject": [
-    "@types/node"
-  ]
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "reject": ["@types/node"]
 }

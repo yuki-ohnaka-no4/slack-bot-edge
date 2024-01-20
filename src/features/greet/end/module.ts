@@ -1,5 +1,6 @@
-import type { AnyMessageBlock } from "slack-cloudflare-workers";
 import { format } from "date-fns";
+
+import type { AnyMessageBlock } from "slack-cloudflare-workers";
 
 // ---
 
@@ -29,8 +30,7 @@ export const toBlocks = (date: Date): AnyMessageBlock[] => {
         type: "mrkdwn",
         text: [
           "在宅ワークの皆さん、お疲れ様です。",
-          format(date, "H:00") +
-            "を過ぎました。そろそろ皆さん終了の時間かと思います。",
+          format(date, "H:00") + "を過ぎました。そろそろ皆さん終了の時間かと思います。",
           "本日も1日、お疲れ様でした。:chatwork_ありがとう:",
         ].join("\n"),
       },
