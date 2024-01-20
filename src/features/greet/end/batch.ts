@@ -1,5 +1,3 @@
-import { utcToZonedTime } from "date-fns-tz";
-
 import type { Env } from "~/@types/app";
 import { isBusinessHoliday } from "~/apis/sheet";
 
@@ -17,7 +15,7 @@ export const handler = async (client: SlackAPIClient, env: Env): Promise<void> =
     throw new Error("Invalid Params.");
   }
 
-  const date = utcToZonedTime(new Date(), "Asia/Tokyo");
+  const date = new Date(new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }));
 
   console.log(date);
 

@@ -1,5 +1,3 @@
-import { utcToZonedTime } from "date-fns-tz";
-
 import type { Env } from "~/@types/app";
 import { fetchReactions } from "~/apis/slack";
 
@@ -37,7 +35,9 @@ const reactionEventHandler = async (
     return;
   }
 
-  const date = utcToZonedTime(new Date(Number(ts) * 1000), "Asia/Tokyo");
+  const date = new Date(
+    new Date(Number(ts) * 1000).toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" })
+  );
 
   console.log(date);
 
