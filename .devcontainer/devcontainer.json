@@ -1,0 +1,34 @@
+{
+  "name": "slack-bot-edge",
+
+  "dockerComposeFile": ["compose.yaml"],
+  "service": "dev",
+  "workspaceFolder": "/workspace",
+
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {
+      "version": "os-provided"
+    }
+  },
+
+  "postCreateCommand": "npm ci",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "mikestead.dotenv",
+        "EditorConfig.EditorConfig",
+        "oderwat.indent-rainbow",
+        "shardulm94.trailing-spaces",
+        "vscode-icons-team.vscode-icons",
+        "redhat.vscode-yaml",
+        "ms-azuretools.vscode-docker",
+        "GitHub.vscode-github-actions"
+      ]
+    }
+  },
+
+  "remoteUser": "root"
+}

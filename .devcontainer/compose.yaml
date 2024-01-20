@@ -1,0 +1,11 @@
+services:
+  dev:
+    build: ./dev
+    image: dev
+    working_dir: /workspace
+    command: "sleep infinity"
+    volumes:
+      - ../:/workspace/
+volumes:
+  dev_node_modules:
+    driver: local
