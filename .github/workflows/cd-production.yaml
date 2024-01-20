@@ -22,6 +22,10 @@ jobs:
           cache: npm
       - name: Install Packages
         run: npm ci
+      - name: Modify wrangler.toml
+        run: sed -i s/'${SLACK_BOT_KV_ID}'/"${SLACK_BOT_KV_ID}"/g wrangler.toml
+        env:
+          SLACK_BOT_KV_ID: ${{ secrets.SLACK_BOT_KV_ID }}
       - name: Deploy slack-webhooks
         run: |
           npx wrangler deploy \

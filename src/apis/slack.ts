@@ -14,11 +14,13 @@ import type {
 
 export const fetchUsers = async (
   context: ExecutionContext,
+  kv: KVNamespace,
   client: SlackAPIClient
 ): Promise<Member[]> => {
   const response = await cache<UsersListResponse>(
     context,
-    `https://slack.com/api/users.list`,
+    kv,
+    `slack.users.list`,
     (): Promise<UsersListResponse> => {
       return client.users.list({ presence: true });
     },
@@ -68,26 +70,24 @@ export const fetchReactions = async (
 
 const cache = async <T extends SlackAPIResponse>(
   context: ExecutionContext,
-  request: RequestInfo,
+  kv: KVNamespace,
+  key: string,
   fetch: () => Promise<T>,
   ttl: number
 ): Promise<T> => {
-  const cache = caches.default;
-  const cached = await cache.match(request);
+  const cached = await kv.get(key, {
+    cacheTtl: ttl,
+  });
 
   if (cached) {
-    console.log(`cache hit slack`);
-    return await cached.json<T>();
+    console.log(`cache hit : ${key}`);
+    return JSON.parse(cached) as T;
   }
 
   const result = await fetch();
 
-  const response = new Response(JSON.stringify(result), result);
-
-  response.headers.append("Cache-Control", `s-maxage=${ttl}`);
-
-  if (response.ok) {
-    context.waitUntil(cache.put(request, response.clone()));
+  if (result.ok) {
+    context.waitUntil(kv.put(key, JSON.stringify(result), { expirationTtl: ttl }));
   }
 
   return result;

@@ -44,9 +44,11 @@ export const toReactionRecords = async (
 ): Promise<ReactionRecord[]> => {
   const allUserIdSet = new Set<string>(await fetchAllUsers(env, date));
 
-  const users = (await fetchUsers(context, client)).filter(({ id }: Member): boolean => {
-    return id !== undefined && allUserIdSet.has(id);
-  });
+  const users = (await fetchUsers(context, env.SLACK_BOT_KV, client)).filter(
+    ({ id }: Member): boolean => {
+      return id !== undefined && allUserIdSet.has(id);
+    }
+  );
 
   const reactedUserIds = reactions.flatMap(({ users }: Reaction): string[] => {
     return users ?? [];
