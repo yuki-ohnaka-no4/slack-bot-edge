@@ -31,6 +31,8 @@ const handler = async (
     channel,
     text: toTitle(date),
     blocks: toBlocks(toTitle(date), await toReactionRecords(env, context, client, date)),
+    unfurl_links: false,
+    unfurl_media: false,
   });
 
   if (!response.ok) {

@@ -27,6 +27,8 @@ export const handler = async (client: SlackAPIClient, env: Env): Promise<void> =
     channel,
     text: toTitle(date),
     blocks: toBlocks(date),
+    unfurl_links: false,
+    unfurl_media: false,
   });
 
   if (!response.ok) {
