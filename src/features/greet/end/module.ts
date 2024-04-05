@@ -45,5 +45,12 @@ export const toBlocks = (date: Date): AnyMessageBlock[] => {
         text: "休みや出社日の変更は <https://no4-chat.slack.com/canvas/CQYH702Q4?focus_section_id=temp:C:cUL36314564bcff4c80a892852b3|こちら> から",
       },
     },
+    {
+      type: "section",
+      text: {
+        type: "mrkdwn",
+        text: "何かありましたら、<https://no4-chat.slack.com/archives/C0548KBNB3P|#nw-isms委員連絡> までお願いします。",
+      },
+    },
   ];
 };
