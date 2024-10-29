@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 
 import type { Env } from "~/@types/app";
-import { changeToNextMonthSheet, fetchAccessToken, duplicateSheet } from "~/apis/sheet";
+import { fetchAccessToken, duplicateSheet, writeValueToCell, fetchAllSheets } from "~/apis/sheet";
 
 export const handler = async (env: Env): Promise<void> => {
   console.info("handler");
@@ -11,13 +11,33 @@ export const handler = async (env: Env): Promise<void> => {
   try {
     const accessToken = await fetchAccessToken(env);
 
-    // 翌月
+    // 翌月の1日目
     date.setMonth(date.getMonth() + 1);
-    const newSheetName = format(date, "yyyy/M");
+    date.setDate(1);
 
-    const duplicatedSheet = await duplicateSheet(env, accessToken, newSheetName);
+    const templateSheetId = 1903348701;
 
-    await changeToNextMonthSheet(env, date, duplicatedSheet.properties.title, accessToken);
+    const nextMonthSheetName = format(date, "yyyy/M");
+
+    const sheets = await fetchAllSheets(env);
+    const isNextMonthSheetExists = sheets.some(
+      (sheet) => sheet.properties.title === nextMonthSheetName
+    );
+
+    if (!isNextMonthSheetExists) {
+      await duplicateSheet(
+        env,
+        accessToken,
+        templateSheetId,
+        nextMonthSheetName
+      );
+    }
+
+    const range = "A4";
+    const firstOfMonth = format(date, "yyyy/MM/dd");
+    const values = [firstOfMonth];
+
+    await writeValueToCell(env, accessToken, nextMonthSheetName, range, values);
   } catch (e) {
     console.error(e);
   }
